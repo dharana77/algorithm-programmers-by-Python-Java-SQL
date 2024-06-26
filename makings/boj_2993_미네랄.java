@@ -8,15 +8,18 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 public class Main {
-    public static char[][] arr;
-    public static int R, C, N;
-    public static StringBuilder sb = new StringBuilder();
+    private static char[][] arr;
+    private static int R, C, N;
+    private static StringBuilder sb = new StringBuilder();
 
-    public class Cluster{
+    private static int[] dx = {-1, 1, 0, 0};
+    private static int[] dy = {0, 0, -1, 1};
+
+    public static class Cluster{
         private List<Pair> points = new ArrayList<>();
     }
 
-    public class Pair{
+    public static class Pair{
         private int x;
         private int y;
         public Pair(int x, int y){
@@ -54,7 +57,11 @@ public class Main {
                 startFromRight(h);
             }
             List<Cluster> clusters = findFlyingClusters();
-            applyGravityForClusters();
+            //cluster에 minHeight 추가 및 minHeight 기준으로 정렬해야 할듯
+            //그래야 클러스터 여러개 인데 다른 클러스터에 부딪쳐서 우선순위가 제대로 처리안될때 생기는 오류 수정할 수 있을듯
+            for (int k=0; k< clusters.size(); k++){
+                applyGravityForClusters(clusters.get(k));
+            }
         }
 
         for(int i=0; i<R; i++){
@@ -100,7 +107,22 @@ public class Main {
         return clusters;
     }
 
-    public static void applyGravityForClusters(){
+    public static void dfs(int x, int y, boolean[][] visited, Cluster cluster){
+        visited[x][y] = true;
+        cluster.points.add(new Pair(x, y));
+
+        for(int i=0; i<4; i++){
+            int nx = x + dx[i];
+            int ny = y + dy[i];
+            if(nx >= 0 && nx < R && ny >= 0 && ny < C){
+                if(arr[nx][ny] == 'x' && !visited[nx][ny]){
+                    dfs(nx, ny, visited, cluster);
+                }
+            }
+        }
+    }
+
+    public static void applyGravityForClusters(Cluster cluster){
         for(int j=0; j<C; j++){
             for(int i=R-1; i>=0; i--){
                 if(i-1 >=0 && arr[i-1][j] == 'x' && arr[i][j] == '.'){
