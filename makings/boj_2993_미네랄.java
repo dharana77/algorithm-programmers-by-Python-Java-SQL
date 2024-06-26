@@ -3,12 +3,27 @@ package org.example;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 public class Main {
     public static char[][] arr;
     public static int R, C, N;
     public static StringBuilder sb = new StringBuilder();
+
+    public class Cluster{
+        private List<Pair> points = new ArrayList<>();
+    }
+
+    public class Pair{
+        private int x;
+        private int y;
+        public Pair(int x, int y){
+            this.x = x;
+            this.y = y;
+        }
+    }
 
     public static void main(String[] args) throws IOException {
 
@@ -38,7 +53,7 @@ public class Main {
             }else{
                 startFromRight(h);
             }
-            findFlyClusters();
+            List<Cluster> clusters = findFlyingClusters();
             applyGravityForClusters();
         }
 
@@ -70,7 +85,22 @@ public class Main {
         }
     }
 
-    public static void applyGravity(){
+    public static List<Cluster> findFlyingClusters(){
+        boolean[][] visited = new boolean[R][C];
+        List<Cluster> clusters = new ArrayList<>();
+        for(int i=0; i<R; i++){
+            for(int j=0; j<C; j++){
+                if(arr[i][j] == 'x' && !visited[i][j]){
+                    Cluster cluster = new Cluster();
+                    dfs(i, j, visited, cluster);
+                    clusters.add(cluster);
+                }
+            }
+        }
+        return clusters;
+    }
+
+    public static void applyGravityForClusters(){
         for(int j=0; j<C; j++){
             for(int i=R-1; i>=0; i--){
                 if(i-1 >=0 && arr[i-1][j] == 'x' && arr[i][j] == '.'){
