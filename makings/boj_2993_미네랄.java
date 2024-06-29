@@ -27,17 +27,18 @@ public class Main {
             int cx = this.points.get(0).x;
             int cy = this.points.get(0).y;
             if(cx == R-1){
-                System.out.println("R " + R + " " + cx + " " + cy);
-                System.out.println("first");
-                return false;
-            }else if(cy + 1 < C && arr[cx][cy+1] == 'x') {
-                System.out.println("second" + cx + " " + cy);
-                return false;
-            }else if(cy - 1 >= 0 && arr[cx][cy-1] == 'x'){
-                System.out.println("third");
+//                System.out.println("R " + R + " " + cx + " " + cy);
+//                System.out.println("first");
                 return false;
             }
-            System.out.println("true");
+//            else if(cy + 1 < C && arr[cx][cy+1] == 'x') {
+//                System.out.println("second" + cx + " " + cy);
+//                return false;
+//            }else if(cy - 1 >= 0 && arr[cx][cy-1] == 'x'){
+//                System.out.println("third");
+//                return false;
+//            }
+//            System.out.println("true");
             return true;
         }
     }
@@ -67,7 +68,7 @@ public class Main {
         for(int i=0; i<R; i++){
             st = new StringTokenizer(br.readLine());
             String line = st.nextToken();
-            System.out.println(line);
+//            System.out.println(line);
             for(int j=0; j<C; j++){
                 arr[i][j] = line.charAt(j);
             }
@@ -127,17 +128,17 @@ public class Main {
                     visited[i][j] = true;
                     Cluster cluster = new Cluster();
                     dfs(i, j, visited, cluster);
-                    System.out.println("before sorted");
-                    for(int k=0; k<cluster.points.size(); k++){
-                        Pair p = cluster.points.get(k);
-                        System.out.println(p.x + " " + p.y);
-                    }
+//                    System.out.println("before sorted");
+//                    for(int k=0; k<cluster.points.size(); k++){
+//                        Pair p = cluster.points.get(k);
+//                        System.out.println(p.x + " " + p.y);
+//                    }
                     cluster.sort();
-                    System.out.println("after sorted");
-                    for(int k=0; k<cluster.points.size(); k++){
-                        Pair p = cluster.points.get(k);
-                        System.out.println(p.x + " " + p.y);
-                    }
+//                    System.out.println("after sorted");
+//                    for(int k=0; k<cluster.points.size(); k++){
+//                        Pair p = cluster.points.get(k);
+//                        System.out.println(p.x + " " + p.y);
+//                    }
 //                    System.out.println("=========");
 //                    System.out.println(cluster.points.get(0).x + " " + cluster.points.get(0).y);
                     if(cluster.isFlying()) {
@@ -148,6 +149,7 @@ public class Main {
         }
         clusters.sort(Comparator.comparingInt(cluster -> cluster.points.get(0).x));
 
+        System.out.println("clusters");
         for(int i=0; i < clusters.size(); i++){
             Cluster cluster = clusters.get(i);
             for(int j=0; j<cluster.points.size(); j++){
@@ -176,18 +178,18 @@ public class Main {
 
     public static void applyGravityForClusters(Cluster cluster) {
         List<Pair> points = cluster.points;
-
+        System.out.println("apply gravity");
         Pair p = points.get(0);
         int x = p.x;
         int y = p.y;
-
+        System.out.println(x + " " + y);
         int i = 1;
         while(x + i < R && arr[x+i][y] == '.'){
             for (int k = 0; k < points.size(); k++) {
                 Pair point = points.get(k);
+                if(arr[point.x+i][point.y] == 'x') continue;
                 arr[point.x][point.y] = '.';
-                point.x += i;
-                arr[point.x][point.y] = 'x';
+                arr[point.x + i][point.y] = 'x';
             }
             i++;
         }
